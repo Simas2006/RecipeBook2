@@ -3,8 +3,14 @@ var express = require("express");
 var webshot = require("node-webshot");
 var app = express();
 var PORT = process.argv[2] || 4545;
+var block_screenshotter = false;
 
 app.post("/submitURL",function(request,response) {
+  if ( block_screenshotter ) {
+    response.send("blocked");
+    return;
+  }
+  block_screenshotter = true;
   var params = "";
   request.on("data",function(chunk) {
     params += chunk;
@@ -32,6 +38,7 @@ app.post("/submitURL",function(request,response) {
         fs.writeFile(__dirname + "/data.json",JSON.stringify(data,null,2),function(err) {
           if ( err ) throw err;
           response.send("ok");
+          block_screenshotter = false;
         });
       });
     });
