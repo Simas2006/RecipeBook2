@@ -27,6 +27,7 @@ app.post("/submit",function(request,response) {
       if ( err ) {
         console.log(err);
         response.send("error");
+        block_screenshotter = false;
         return;
       }
       fs.readFile(__dirname + "/data.json",function(err,data) {

@@ -19,6 +19,9 @@
       height: 20px;
       font-size: 100%;
     }
+    #processingText {
+      display: none;
+    }
     .bigCol {
       width: 50vw;
     }
@@ -44,6 +47,7 @@
     }
   </style>
   <script>
+    var dotCount = 0;
     function addItem() {
       var req = new XMLHttpRequest();
       req.onload = function() {
@@ -51,6 +55,14 @@
       }
       req.open("POST","/submit");
       req.send(`${encodeURIComponent(document.getElementById("url").value)},${encodeURIComponent(document.getElementById("name").value)}`);
+      document.getElementById("addingRow").style.display = "none";
+      document.getElementById("processingText").style.display = "block";
+      document.getElementById("processingText").innerText = `Processing`;
+      setInterval(function() {
+        dotCount++;
+        if ( dotCount > 3 ) dotCount = 0;
+        document.getElementById("processingText").innerText = `Processing${".".repeat(dotCount)}`;
+      },333);
     }
     function confirmDelete(id,name) {
       if ( confirm(`Are you sure you want to delete "${name}"?`) ) {
@@ -67,7 +79,7 @@
 <body>
   <h1>RecipeBook</h1>
   <hr />
-  <table>
+  <table id="addingRow">
     <tr>
       <td class="splitCol">
         <input type="text" id="url" placeholder="URL" />
@@ -80,6 +92,7 @@
       </td>
     </tr>
   </table>
+  <p id="processingText"></p>
   <table>
 {{items}}
   </table>
