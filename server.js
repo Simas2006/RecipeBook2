@@ -57,7 +57,7 @@ app.get("/",function(request,response) {
         elements.push(`    <tr>
       <td class="bigCol">${itemData[keys[i]].name}</td>
       <td class="smallCol">
-        <a href="/recipe?${keys[i]}" target="_blank">Open</a>
+        <a href="/recipe?id=${keys[i]}" target="_blank">Open</a>
       </td>
       <td class="smallCol">
         <button onclick="javascript: confirmDelete(${itemData[keys[i]].name},${keys[i]})" class="remove">X</button>
@@ -68,6 +68,30 @@ app.get("/",function(request,response) {
     });
   });
 });
+
+app.get("/recipe",function(request,response) {
+  var id = request.query.id;
+  fs.readFile(__dirname + "/public/recipe.html",function(err,data) {
+    if ( err ) throw err;
+    data = data.toString();
+    fs.readFile(__dirname + "/data.json",function(err,itemData) {
+      if ( err ) throw err;
+      itemData = JSON.parse(itemData.toString());
+      var element = itemData[id];
+      if ( ! element ) {
+        response.send("error");
+        return;
+      }
+      data = data
+        .replace("{{name}}",element.name)
+        .replace("{{url}}",element.url)
+        .replace("{{img}}",`/pictures/${id}.png`);
+      response.send(data);
+    });
+  });
+});
+
+app.use("/pictures",express.static(__dirname + "/pictures"));
 
 app.listen(PORT,function() {
   console.log("Listening on port " + PORT);
