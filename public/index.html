@@ -5,18 +5,26 @@
   <title>RecipeBook2</title>
   <style>
     body {
-      font-family: "Verdana"
+      font-family: "Verdana";
+      font-size: 125%;
+    }
+    @media only screen and (min-device-width: 320px) and (max-device-width: 812px) {
+      body {
+        font-size: 220% !important;
+      }
     }
     td {
       border-bottom: 1px solid black;
       height: 6vh;
+    }
+    button {
+      font-size: 100%;
     }
     a {
       color: blue
     }
     input {
       width: 95%;
-      height: 20px;
       font-size: 100%;
     }
     #processingText {
@@ -34,14 +42,12 @@
       text-align: center;
     }
     .add {
-      width: 30px;
-      height: 30px;
       background-color: #00ff00;
       color: black;
     }
     .remove {
-      width: 30px;
-      height: 30px;
+      min-width: 4vw;
+      min-height: 4vw;
       background-color: red;
       color: white;
     }

@@ -47,30 +47,6 @@ app.post("/submit",function(request,response) {
   });
 });
 
-app.get("/",function(request,response) {
-  fs.readFile(__dirname + "/public/index.html",function(err,data) {
-    if ( err ) throw err;
-    data = data.toString();
-    var elements = [];
-    fs.readFile(__dirname + "/data.json",function(err,itemData) {
-      itemData = JSON.parse(itemData.toString());
-      var keys = Object.keys(itemData);
-      for ( var i = 0; i < keys.length; i++ ) {
-        elements.push(`    <tr>
-      <td class="bigCol">${itemData[keys[i]].name}</td>
-      <td class="smallCol">
-        <a href="/recipe?id=${keys[i]}" target="_blank">Open</a>
-      </td>
-      <td class="smallCol">
-        <button onclick="javascript: confirmDelete('${keys[i]}','${itemData[keys[i]].name}')" class="remove">X</button>
-      </td>
-    </tr>`);
-      }
-      response.send(data.replace("{{items}}",elements.join("\n")));
-    });
-  });
-});
-
 app.get("/delete",function(request,response) {
   var id = request.query.id;
   fs.readFile(__dirname + "/data.json",function(err,data) {
@@ -87,6 +63,30 @@ app.get("/delete",function(request,response) {
         if ( err ) throw err;
         response.send("ok");
       });
+    });
+  });
+});
+
+app.get("/",function(request,response) {
+  fs.readFile(__dirname + "/public/index.html",function(err,data) {
+    if ( err ) throw err;
+    data = data.toString();
+    var elements = [];
+    fs.readFile(__dirname + "/data.json",function(err,itemData) {
+      itemData = JSON.parse(itemData.toString());
+      var keys = Object.keys(itemData).sort((a,b) => itemData[a].name.localeCompare(itemData[b].name));
+      for ( var i = 0; i < keys.length; i++ ) {
+        elements.push(`    <tr>
+      <td class="bigCol">${itemData[keys[i]].name}</td>
+      <td class="smallCol">
+        <a href="/recipe?id=${keys[i]}" target="_blank">Open</a>
+      </td>
+      <td class="smallCol">
+        <button onclick="javascript: confirmDelete('${keys[i]}','${itemData[keys[i]].name}')" class="remove">X</button>
+      </td>
+    </tr>`);
+      }
+      response.send(data.replace("{{items}}",elements.join("\n")));
     });
   });
 });
