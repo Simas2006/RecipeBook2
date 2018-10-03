@@ -1,0 +1,16 @@
+{
+  "name": "recipebook2",
+  "version": "1.0.0",
+  "description": "Recipe Book (version 2)",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "author": "Simas Juknelis",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "node-webshot": "^1.0.3"
+  }
+}
