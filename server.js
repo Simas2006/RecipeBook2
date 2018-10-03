@@ -27,6 +27,7 @@ app.post("/submit",function(request,response) {
       if ( err ) {
         console.log(err);
         response.send("error");
+        return;
       }
       fs.readFile(__dirname + "/data.json",function(err,data) {
         if ( err ) throw err;
@@ -60,11 +61,31 @@ app.get("/",function(request,response) {
         <a href="/recipe?id=${keys[i]}" target="_blank">Open</a>
       </td>
       <td class="smallCol">
-        <button onclick="javascript: confirmDelete(${itemData[keys[i]].name},${keys[i]})" class="remove">X</button>
+        <button onclick="javascript: confirmDelete('${keys[i]}','${itemData[keys[i]].name}')" class="remove">X</button>
       </td>
     </tr>`);
       }
       response.send(data.replace("{{items}}",elements.join("\n")));
+    });
+  });
+});
+
+app.get("/delete",function(request,response) {
+  var id = request.query.id;
+  fs.readFile(__dirname + "/data.json",function(err,data) {
+    if ( err ) throw err;
+    data = JSON.parse(data.toString());
+    if ( ! data[id] ) {
+      response.send("error");
+      return;
+    }
+    delete data[id];
+    fs.writeFile(__dirname + "/data.json",JSON.stringify(data,null,2),function(err) {
+      if ( err ) throw err;
+      fs.unlink(`${__dirname}/pictures/${id}.png`,function(err) {
+        if ( err ) throw err;
+        response.send("ok");
+      });
     });
   });
 });
@@ -82,9 +103,15 @@ app.get("/recipe",function(request,response) {
         response.send("error");
         return;
       }
+      var prefix;
+      if ( element.url.startsWith("http://") || element.url.startsWith("https://") || element.url.startsWith("//") ) {
+        prefix = "";
+      } else {
+        prefix = "//";
+      }
       data = data
         .replace("{{name}}",element.name)
-        .replace("{{url}}",element.url)
+        .replace("{{url}}",prefix + element.url)
         .replace("{{img}}",`/pictures/${id}.png`);
       response.send(data);
     });

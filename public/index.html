@@ -14,12 +14,27 @@
     a {
       color: blue
     }
+    input {
+      width: 95%;
+      height: 20px;
+      font-size: 100%;
+    }
     .bigCol {
       width: 50vw;
     }
     .smallCol {
       width: 25vw;
       text-align: center;
+    }
+    .thirdCol {
+      width: 33vw;
+      text-align: center;
+    }
+    .add {
+      width: 30px;
+      height: 30px;
+      background-color: #00ff00;
+      color: black;
     }
     .remove {
       width: 30px;
@@ -28,10 +43,43 @@
       color: white;
     }
   </style>
+  <script>
+    function addItem() {
+      var req = new XMLHttpRequest();
+      req.onload = function() {
+        location.reload();
+      }
+      req.open("POST","/submit");
+      req.send(`${encodeURIComponent(document.getElementById("url").value)},${encodeURIComponent(document.getElementById("name").value)}`);
+    }
+    function confirmDelete(id,name) {
+      if ( confirm(`Are you sure you want to delete "${name}"?`) ) {
+        var req = new XMLHttpRequest();
+        req.onload = function() {
+          location.reload();
+        }
+        req.open("GET",`/delete?id=${id}`);
+        req.send();
+      }
+    }
+  </script>
 </head>
 <body>
   <h1>RecipeBook</h1>
   <hr />
+  <table>
+    <tr>
+      <td class="thirdCol">
+        <input type="text" id="url" placeholder="URL" />
+      </td>
+      <td class="thirdCol">
+        <input type="text" id="name" placeholder="Name" />
+      </td>
+      <td class="thirdCol">
+        <button onclick="addItem()" class="add">+</button>
+      </td>
+    </tr>
+  </table>
   <table>
 {{items}}
   </table>
