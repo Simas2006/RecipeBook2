@@ -5,7 +5,7 @@ var app = express();
 var PORT = process.argv[2] || 4545;
 var block_screenshotter = false;
 
-app.post("/submitURL",function(request,response) {
+app.post("/submit",function(request,response) {
   if ( block_screenshotter ) {
     response.send("blocked");
     return;
@@ -45,8 +45,28 @@ app.post("/submitURL",function(request,response) {
   });
 });
 
-app.get("/blank",function(request,response) {
-  response.send("");
+app.get("/",function(request,response) {
+  fs.readFile(__dirname + "/public/index.html",function(err,data) {
+    if ( err ) throw err;
+    data = data.toString();
+    var elements = [];
+    fs.readFile(__dirname + "/data.json",function(err,itemData) {
+      itemData = JSON.parse(itemData.toString());
+      var keys = Object.keys(itemData);
+      for ( var i = 0; i < keys.length; i++ ) {
+        elements.push(`    <tr>
+      <td class="bigCol">${itemData[keys[i]].name}</td>
+      <td class="smallCol">
+        <a href="/recipe?${keys[i]}" target="_blank">Open</a>
+      </td>
+      <td class="smallCol">
+        <button onclick="javascript: confirmDelete(${itemData[keys[i]].name},${keys[i]})" class="remove">X</button>
+      </td>
+    </tr>`);
+      }
+      response.send(data.replace("{{items}}",elements.join("\n")));
+    });
+  });
 });
 
 app.listen(PORT,function() {
@@ -56,7 +76,7 @@ app.listen(PORT,function() {
       if ( err.code == "ENOENT" ) {
         fs.writeFile(__dirname + "/data.json","{}",function(err) {
           if ( err ) throw err;
-        })
+        });
       } else {
         throw err;
       }
