@@ -55,6 +55,10 @@
   <script>
     var dotCount = 0;
     function addItem() {
+      if ( ! document.getElementById("url").value || ! document.getElementById("name").value ) {
+        alert("Invalid URL or recipe name.");
+        return;
+      }
       var req = new XMLHttpRequest();
       req.onload = function() {
         location.reload();

@@ -18,6 +18,7 @@ app.post("/submit",function(request,response) {
   request.on("end",function() {
     params = params.split(",").map(item => decodeURIComponent(item));
     var pictureID = Math.floor(Math.random() * 1e9);
+    console.log(`Processing ID ${pictureID}...`);
     webshot(params[0],`${__dirname}/pictures/${pictureID}.png`,{
       shotSize: {
         width: "all",
