@@ -1,0 +1,18 @@
+{
+  "name": "RecipeBook",
+  "version": "1.0",
+  "description": "Shortcut for RecipeBook",
+  "permissions": [],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "images/icon_32.png"
+  },
+  "icons": {
+    "16": "images/icon_16.png",
+    "32": "images/icon_32.png",
+    "48": "images/icon_48.png",
+    "128": "images/icon_128.png"
+  },
+  "permissions": ["tabs"],
+  "manifest_version": 2
+}
