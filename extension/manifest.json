@@ -15,7 +15,7 @@
   },
   "permissions": [
     "tabs",
-    "http://10.0.1.126:4545"
+    "http://10.0.1.126:4545/"
   ],
   "manifest_version": 2
 }
