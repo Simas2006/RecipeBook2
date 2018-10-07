@@ -14,8 +14,7 @@
     "128": "images/icon_128.png"
   },
   "permissions": [
-    "tabs",
-    "http://10.0.1.11:4545/"
+    "tabs"
   ],
   "manifest_version": 2
 }
