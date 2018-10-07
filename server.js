@@ -28,8 +28,6 @@ app.put("/submit",function(request,response) {
     },function(err) {
       if ( err ) {
         console.log(err);
-        response.header("Access-Control-Allow-Origin",`chrome-extension://${EXTENSION_ID}`);
-        response.header("Access-Control-Allow-Methods","PUT");
         response.send("error");
         block_screenshotter = false;
         return;
@@ -43,20 +41,12 @@ app.put("/submit",function(request,response) {
         }
         fs.writeFile(__dirname + "/data.json",JSON.stringify(data,null,2),function(err) {
           if ( err ) throw err;
-          response.header("Access-Control-Allow-Origin",`chrome-extension://${EXTENSION_ID}`);
-          response.header("Access-Control-Allow-Methods","PUT");
           response.send("ok");
           block_screenshotter = false;
         });
       });
     });
   });
-});
-
-app.options("/submit",function(request,response) {
-  response.header("Access-Control-Allow-Origin",`chrome-extension://${EXTENSION_ID}`);
-  response.header("Access-Control-Allow-Methods","PUT");
-  response.sendStatus(200);
 });
 
 app.delete("/delete",function(request,response) {
