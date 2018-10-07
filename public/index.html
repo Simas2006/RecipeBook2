@@ -63,7 +63,7 @@
       req.onload = function() {
         location.reload();
       }
-      req.open("POST","/submit");
+      req.open("PUT","/submit");
       req.send(`${encodeURIComponent(document.getElementById("url").value)},${encodeURIComponent(document.getElementById("name").value)}`);
       document.getElementById("addingRow").style.display = "none";
       document.getElementById("processingText").style.display = "block";
@@ -80,7 +80,7 @@
         req.onload = function() {
           location.reload();
         }
-        req.open("GET",`/delete?id=${id}`);
+        req.open("DELETE",`/delete?id=${id}`);
         req.send();
       }
     }

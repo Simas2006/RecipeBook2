@@ -1,15 +1,16 @@
 var processing = false;
+var IP = "http://10.0.1.116:4545";
 
 function addItem() {
   if ( processing ) return;
   processing = true;
   var req = new XMLHttpRequest();
   req.onload = function() {
-    chrome.tabs.create({url: "http://10.0.1.11:4545"});
+    chrome.tabs.create({url: IP});
   }
-  req.open("POST","http://10.0.1.11:4545/submit");
   chrome.tabs.query({active: true,lastFocusedWindow: true},function(tabs) {
     var url = tabs[0].url;
+    req.open("PUT",`${IP}/submit`);
     req.send(`${url},${document.getElementById("name").value}`);
     document.getElementById("processingText").innerText = "Processing";
     document.getElementById("name").disabled = "disabled";
@@ -24,7 +25,7 @@ function addItem() {
 
 window.onload = function() {
   document.getElementById("mainPageButton").onclick = function() {
-    chrome.tabs.create({url: "http://10.0.1.11:4545"});
+    chrome.tabs.create({url: IP});
   }
   document.getElementById("addItemButton").onclick = addItem;
 }

@@ -3,9 +3,10 @@ var express = require("express");
 var webshot = require("node-webshot");
 var app = express();
 var PORT = process.argv[2] || 4545;
+var EXTENSION_ID = "jnbmceehfmnkdmebcfnjgefekolfpgoc";
 var block_screenshotter = false;
 
-app.post("/submit",function(request,response) {
+app.put("/submit",function(request,response) {
   if ( block_screenshotter ) {
     response.send("blocked");
     return;
@@ -27,6 +28,8 @@ app.post("/submit",function(request,response) {
     },function(err) {
       if ( err ) {
         console.log(err);
+        response.header("Access-Control-Allow-Origin",`chrome-extension://${EXTENSION_ID}`);
+        response.header("Access-Control-Allow-Methods","PUT");
         response.send("error");
         block_screenshotter = false;
         return;
@@ -40,6 +43,8 @@ app.post("/submit",function(request,response) {
         }
         fs.writeFile(__dirname + "/data.json",JSON.stringify(data,null,2),function(err) {
           if ( err ) throw err;
+          response.header("Access-Control-Allow-Origin",`chrome-extension://${EXTENSION_ID}`);
+          response.header("Access-Control-Allow-Methods","PUT");
           response.send("ok");
           block_screenshotter = false;
         });
@@ -48,7 +53,13 @@ app.post("/submit",function(request,response) {
   });
 });
 
-app.get("/delete",function(request,response) {
+app.options("/submit",function(request,response) {
+  response.header("Access-Control-Allow-Origin",`chrome-extension://${EXTENSION_ID}`);
+  response.header("Access-Control-Allow-Methods","PUT");
+  response.sendStatus(200);
+});
+
+app.delete("/delete",function(request,response) {
   var id = request.query.id;
   fs.readFile(__dirname + "/data.json",function(err,data) {
     if ( err ) throw err;
